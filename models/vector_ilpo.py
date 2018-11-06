@@ -49,7 +49,7 @@ class VectorILPO(ILPO):
         num_samples = len(inputs)
 
         inputs = tf.convert_to_tensor(inputs, tf.float32)
-        targets = tf.convert_to_tensor(targets, tf.float32)
+        targets = tf.convert_to_tensor(targets, tf.float32)                       #？？？？？？？？
 
         paths_batch, inputs_batch, targets_batch = tf.train.shuffle_batch(
             [paths, inputs, targets],
@@ -61,7 +61,7 @@ class VectorILPO(ILPO):
 
         inputs_batch.set_shape([args.batch_size, inputs_batch.shape[-1]])
         targets_batch.set_shape([args.batch_size, targets_batch.shape[-1]])
-        steps_per_epoch = int(math.ceil(num_samples / args.batch_size))
+        steps_per_epoch = int(math.ceil(num_samples / args.batch_size))          #大于值得最小整数
 
         return Examples(
             paths=paths_batch,
