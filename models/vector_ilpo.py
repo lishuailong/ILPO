@@ -21,7 +21,7 @@ class VectorILPO(ILPO):
         # if the txt names are numbers, sort by the value rather than asciibetically
         # having sorted inputs means that the outputs are sorted in test mode
         if all(get_name(path).isdigit() for path in input_paths):
-            input_paths = sorted(input_paths, key=lambda path: int(get_name(path)))
+            input_paths = sorted(input_paths, key=lambda path: int(get_name(path)))             #？？？？？？？？
         else:
             input_paths = sorted(input_paths)
 
