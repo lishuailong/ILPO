@@ -30,7 +30,7 @@ def main():
             state_1 = obs
 
             if np.random.uniform(0,1) <= RANDOM:
-                action = act(obs[None])[0]
+                action = act(obs[None])[0]                             #???????????
             else:
                 action = env.action_space.sample()
 
@@ -51,7 +51,7 @@ def main():
 
                 for w in state_2:
                     to_write += str(w) + ','
-                to_write = to_write[:-1]
+                to_write = to_write[:-1]                      #???????????
                 to_write += ']'
 
                 outfile.write(to_write)
