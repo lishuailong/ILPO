@@ -10,18 +10,18 @@ class VectorILPO(ILPO):
         if args.input_dir is None or not os.path.exists(args.input_dir):
             raise Exception("input_dir does not exist")
 
-        input_paths = glob.glob(os.path.join(args.input_dir, "*.txt"))
+        input_paths = glob.glob(os.path.join(args.input_dir, "*.txt"))                         #匹配路径
         if len(input_paths) == 0:
             raise Exception("input_dir contains no demonstration files")
 
         def get_name(path):
-            name, _ = os.path.splitext(os.path.basename(path))
+            name, _ = os.path.splitext(os.path.basename(path))                            #返回path的最后文件名，然后分离文件名和扩展名
             return name
 
         # if the txt names are numbers, sort by the value rather than asciibetically
         # having sorted inputs means that the outputs are sorted in test mode
         if all(get_name(path).isdigit() for path in input_paths):
-            input_paths = sorted(input_paths, key=lambda path: int(get_name(path)))             #？？？？？？？？
+            input_paths = sorted(input_paths, key=lambda path: int(get_name(path)))             #排序操作
         else:
             input_paths = sorted(input_paths)
 
@@ -49,9 +49,9 @@ class VectorILPO(ILPO):
         num_samples = len(inputs)
 
         inputs = tf.convert_to_tensor(inputs, tf.float32)
-        targets = tf.convert_to_tensor(targets, tf.float32)                       #？？？？？？？？
+        targets = tf.convert_to_tensor(targets, tf.float32)                       #变为张量
 
-        paths_batch, inputs_batch, targets_batch = tf.train.shuffle_batch(
+        paths_batch, inputs_batch, targets_batch = tf.train.shuffle_batch(        #队列中数据打乱再读取
             [paths, inputs, targets],
             batch_size=args.batch_size,
             num_threads=1,
@@ -60,7 +60,7 @@ class VectorILPO(ILPO):
             min_after_dequeue=1000)
 
         inputs_batch.set_shape([args.batch_size, inputs_batch.shape[-1]])
-        targets_batch.set_shape([args.batch_size, targets_batch.shape[-1]])
+        targets_batch.set_shape([args.batch_size, targets_batch.shape[-1]])      #更新图中的shape
         steps_per_epoch = int(math.ceil(num_samples / args.batch_size))          #大于值得最小整数
 
         return Examples(
