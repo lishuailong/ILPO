@@ -114,10 +114,10 @@ class VectorILPO(ILPO):
         return s_t_layers[-1]
 
     def train_examples(self, examples):
-        print("examples count = %d" % examples.count)
+        print("examples count = %d" % examples.count)                                  #？？？？？？？
 
         # inputs and targets are [batch_size, height, width, channels]
-        model = self.create_model(examples.inputs, examples.targets)
+        model = self.create_model(examples.inputs, examples.targets)                   #？？？？？？？？
         tf.summary.scalar("generator_loss_L1", model.gen_loss_L1)
 
         for var in tf.trainable_variables():
