@@ -129,11 +129,11 @@ class VectorILPO(ILPO):
         with tf.name_scope("parameter_count"):
             parameter_count = tf.reduce_sum([tf.reduce_prod(tf.shape(v)) for v in tf.trainable_variables()])
 
-        saver = tf.train.Saver(max_to_keep=1)
+        saver = tf.train.Saver(max_to_keep=1)                                            #保存和恢复变量，保存的文件数为1
 
-        logdir = args.output_dir if (args.trace_freq > 0 or args.summary_freq > 0) else None
-        sv = tf.train.Supervisor(logdir=logdir, save_summaries_secs=0, saver=None)
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=.2)
+        logdir = args.output_dir if (args.trace_freq > 0 or args.summary_freq > 0) else None   #？？？？？？
+        sv = tf.train.Supervisor(logdir=logdir, save_summaries_secs=0, saver=None)             #？？？？？？
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=.2)                        #限制gpu的使用率
 
         with sv.managed_session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
             print("parameter_count =", sess.run(parameter_count))
