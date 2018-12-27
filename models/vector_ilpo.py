@@ -97,7 +97,7 @@ class VectorILPO(ILPO):
     def create_generator(self, layers, generator_outputs_channels):
         """Returns next state prediction given state and latent action."""
 
-        s_t_layers = list(layers)
+        s_t_layers = list(layers)                                                  #元组（）转化为列表【】
 
         with tf.variable_scope("decoder_1"):
             inp = s_t_layers[-1]
@@ -145,7 +145,7 @@ class VectorILPO(ILPO):
 
             max_steps = 2 ** 32
             if args.max_epochs is not None:
-                max_steps = examples.steps_per_epoch * args.max_epochs
+                max_steps = examples.steps_per_epoch * args.max_epochs                      #？？？？？？？
             if args.max_steps is not None:
                 max_steps = args.max_steps
 
@@ -166,7 +166,7 @@ class VectorILPO(ILPO):
                     "global_step": sv.global_step,
                 }
 
-                if should(args.progress_freq):
+                if should(args.progress_freq):                                            #加入字典元素
                     fetches["gen_loss_L1"] = model.gen_loss_L1
 
 
