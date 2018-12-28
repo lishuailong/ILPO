@@ -28,7 +28,7 @@ class Policy(VectorILPO):
         processed_targets = self.process_inputs(self.targets)
         processed_state = self.process_inputs(self.state)
 
-        self.model = self.create_model(processed_inputs, processed_targets)
+        self.model = self.create_model(processed_inputs, processed_targets)                           #？？？？？？？？
 
         self.action_label, loss = self.action_remap_net(self.state, self.action, self.fake_action)
 
@@ -43,7 +43,7 @@ class Policy(VectorILPO):
         policy_var_list = []
 
         # Restore ILPO params and initialize policy params.
-        for var in tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES):
+        for var in tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES):                         #？？？？？？？？？？？
             if "ilpo" in var.name:
                 ilpo_var_list.append(var)
             else:
@@ -55,7 +55,7 @@ class Policy(VectorILPO):
         saver.restore(sess, checkpoint)
         sess.run(tf.variables_initializer(policy_var_list))
 
-        self.state_encoding = self.encode(processed_inputs)
+        self.state_encoding = self.encode(processed_inputs)                                  #？？？？？？？？？？？？？
 
     def min_action(self, state, action, next_state):
         """Find the minimum action for training."""
@@ -63,7 +63,7 @@ class Policy(VectorILPO):
         # Given state and action, find the closest predicted next state to the real one.
         # Use the real action as a training label for remapping the action label.
         deprocessed_outputs = [output for output in self.model.outputs]
-        fake_next_states = sess.run(deprocessed_outputs, feed_dict={self.inputs: [state]})
+        fake_next_states = sess.run(deprocessed_outputs, feed_dict={self.inputs: [state]})      #？？？？？？？？？？？
 
         if self.use_encoding:
             next_state_encoding = sess.run(self.state_encoding, feed_dict={self.inputs: [next_state]})[0]
@@ -74,7 +74,7 @@ class Policy(VectorILPO):
 
         else:
             distances = [np.linalg.norm(next_state - fake_next_state) for fake_next_state in fake_next_states]
-        min_action = np.argmin(distances)
+        min_action = np.argmin(distances)                                               #给出axis最小值下标
         min_state = fake_next_states[min_action]
 
         if self.verbose:
@@ -95,27 +95,27 @@ class Policy(VectorILPO):
             fake_action_one_hot = tf.one_hot(fake_action, args.n_actions)
             fake_action_one_hot = lrelu(fully_connected(fake_action_one_hot, int(fake_state_encoding.shape[-1])), .2)
             real_action_one_hot = tf.one_hot(action, args.real_actions, dtype="int32")
-            fake_state_action = tf.concat([fake_state_encoding, fake_action_one_hot], axis=-1)
+            fake_state_action = tf.concat([fake_state_encoding, fake_action_one_hot], axis=-1)                  #连接两个矩阵
             prediction = lrelu(fully_connected(fake_state_action, 64), .2)
             prediction = lrelu(fully_connected(prediction, 32), .2)
             prediction = fully_connected(prediction, args.real_actions)
-            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=real_action_one_hot, logits=prediction))
+            loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=real_action_one_hot, logits=prediction))  #计算 softmax(logits) 和 labels 之间的交叉熵
 
             return tf.nn.softmax(prediction), loss
 
     def P(self, state):
         """Returns the next_state probabilities for a state."""
 
-        return sess.run(self.model.actions, feed_dict={self.inputs: [state]})[0]
+        return sess.run(self.model.actions, feed_dict={self.inputs: [state]})[0]          #？？？？？？？？？？
 
     def greedy(self, state):
         """Returns the greedy remapped action for a state."""
 
         p_state = self.P(state)
         action = np.argmax(p_state)
-        remapped_action = self.sess.run(self.action_label, feed_dict={self.state: [state], self.fake_action: [action]})[0]
+        remapped_action = self.sess.run(self.action_label, feed_dict={self.state: [state], self.fake_action: [action]})[0]      #？？？？？？？？
 
-        if self.verbose:
+        if self.verbose:                                                     #？？？？？？？？？？？
             print(remapped_action)
 
         return np.argmax(remapped_action)
@@ -133,7 +133,7 @@ class Policy(VectorILPO):
             total_reward += reward
 
         if not self.experiment:
-            reward_summary = sess.run([self.reward_summary], feed_dict={self.reward: [total_reward]})[0]
+            reward_summary = sess.run([self.reward_summary], feed_dict={self.reward: [total_reward]})[0]        #？？？？？？？？？？
             self.summary_writer.add_summary(reward_summary, t)
         else:
             self.exp_writer.write(str(t) + "," + str(total_reward) + "\n")
@@ -171,12 +171,12 @@ class Policy(VectorILPO):
             D.append((prev_obs, action, fake_action))
 
             if len(D) >= args.batch_size:
-                minibatch = random.sample(D, args.batch_size)
+                minibatch = random.sample(D, args.batch_size)                       #从D中抽取元素
                 obs_batch = [d[0] for d in minibatch]
                 action_batch = [d[1] for d in minibatch]
                 fake_action_batch = [d[2] for d in minibatch]
 
-                _, loss_summary = sess.run([self.train_step, self.loss_summary], feed_dict={
+                _, loss_summary = sess.run([self.train_step, self.loss_summary], feed_dict={           #？？？？？？？？
                     self.state: obs_batch,
                     self.action: action_batch,
                     self.fake_action: fake_action_batch})
