@@ -63,7 +63,7 @@ class VectorILPO(ILPO):
         targets_batch.set_shape([args.batch_size, targets_batch.shape[-1]])      #更新图中的shape
         steps_per_epoch = int(math.ceil(num_samples / args.batch_size))          #大于值得最小整数
 
-        return Examples(
+        return Examples(                                                         #？？？？？？？？
             paths=paths_batch,
             inputs=inputs_batch,
             targets=targets_batch,
@@ -77,7 +77,7 @@ class VectorILPO(ILPO):
 
         layers = []
 
-        # encoder_1: [batch, 256, 256, in_channels] => [batch, 128, 128, ngf]
+        # encoder_1: [batch, 256, 256, in_channels] => [batch, 128, 128, ngf]    #？？？？？？？？？
         with tf.variable_scope("encoder_1"):
             output = fully_connected(state, args.ngf)
             layers.append(output)
@@ -162,7 +162,7 @@ class VectorILPO(ILPO):
                     run_metadata = tf.RunMetadata()
 
                 fetches = {
-                    "train": model.train,
+                    "train": model.train,                                               #？？？？？？？？
                     "global_step": sv.global_step,
                 }
 
