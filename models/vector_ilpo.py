@@ -152,7 +152,7 @@ class VectorILPO(ILPO):
             start = time.time()
 
             for step in range(max_steps):
-                def should(freq):
+                def should(freq):                                                            #？？？？？？？？？？
                     return freq > 0 and ((step + 1) % freq == 0 or step == max_steps - 1)
 
                 options = None
