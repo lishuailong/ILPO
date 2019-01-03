@@ -41,7 +41,7 @@ class ILPO():
 
         # Create state embeddings.
         with tf.variable_scope("state_encoding"):
-            s_t_layers = self.create_encoder(s_t)
+            s_t_layers = self.create_encoder(s_t)                                                   #??????????
 
         # Predict latent action probabilities.
         with tf.variable_scope("action"):
@@ -78,7 +78,7 @@ class ILPO():
                 state_action = tf.reshape(state_action, tf.shape(flat_s))
 
                 s_t_layers[-1] = state_action
-                outputs.append(self.create_generator(s_t_layers, generator_outputs_channels))
+                outputs.append(self.create_generator(s_t_layers, generator_outputs_channels))       #????????
 
         expected_states = 0
         shape = tf.shape(outputs[0])
@@ -93,7 +93,7 @@ class ILPO():
     def create_model(self, inputs, targets):
         """ Initializes ILPO model and losses."""
 
-        global_step = tf.contrib.framework.get_or_create_global_step()
+        global_step = tf.contrib.framework.get_or_create_global_step()                              #??????????
         incr_global_step = tf.assign(global_step, global_step+1)
 
         with tf.variable_scope("ilpo_loss"):
