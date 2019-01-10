@@ -63,7 +63,7 @@ class VectorILPO(ILPO):
         targets_batch.set_shape([args.batch_size, targets_batch.shape[-1]])      #更新图中的shape
         steps_per_epoch = int(math.ceil(num_samples / args.batch_size))          #大于值得最小整数
 
-        return Examples(                                                         #？？？？？？？？
+        return Examples(                                                         #namedtuple主要用来产生可以使用名称来访问元素的数据对象
             paths=paths_batch,
             inputs=inputs_batch,
             targets=targets_batch,
@@ -145,7 +145,7 @@ class VectorILPO(ILPO):
 
             max_steps = 2 ** 32
             if args.max_epochs is not None:
-                max_steps = examples.steps_per_epoch * args.max_epochs                      #？？？？？？？
+                max_steps = examples.steps_per_epoch * args.max_epochs                      #
             if args.max_steps is not None:
                 max_steps = args.max_steps
 
