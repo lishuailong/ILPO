@@ -41,7 +41,7 @@ class ILPO():
 
         # Create state embeddings.
         with tf.variable_scope("state_encoding"):
-            s_t_layers = self.create_encoder(s_t)                                                   #??????????
+            s_t_layers = self.create_encoder(s_t)                                                   #在原执行文件的子类中
 
         # Predict latent action probabilities.
         with tf.variable_scope("action"):
@@ -57,19 +57,19 @@ class ILPO():
         # predict next state from latent action and current state.
         outputs = []
         shape = [ind for ind in flat_s.shape]
-        shape[0] = tf.shape(flat_s)[0]
+        shape[0] = tf.shape(flat_s)[0]                                         #？？？？？？？？？？？
 
         for a in range(args.n_actions):
             # there is one generator g(s,z) that takes in a state s and latent action z.
             with tf.variable_scope("generator", reuse=tf.AUTO_REUSE):
-                action = tf.one_hot([a], args.n_actions)
+                action = tf.one_hot([a], args.n_actions)                        
 
                 # obtain fully connected latent action to concatenate with state.
                 action = fully_connected(action, int(flat_s.shape[-1]), reuse=tf.AUTO_REUSE, scope="action_embedding")
                 action = lrelu(action, .2)
 
                 # tile latent action embedding.
-                action = tf.tile(action, [1, tf.shape(s_t)[0]])
+                action = tf.tile(action, [1, tf.shape(s_t)[0]])                 #进行张量扩展？？？？？？？？？？
                 action = tf.reshape(action, shape)
 
                 # concatenate state and action.
@@ -77,8 +77,8 @@ class ILPO():
                 state_action = fully_connected(state_action, int(flat_s.shape[-1]), reuse=tf.AUTO_REUSE, scope="state_action_embedding")
                 state_action = tf.reshape(state_action, tf.shape(flat_s))
 
-                s_t_layers[-1] = state_action
-                outputs.append(self.create_generator(s_t_layers, generator_outputs_channels))       #????????
+                s_t_layers[-1] = state_action                                                       #？？？？？？
+                outputs.append(self.create_generator(s_t_layers, generator_outputs_channels))       #函数无意义????????
 
         expected_states = 0
         shape = tf.shape(outputs[0])
